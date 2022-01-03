@@ -25,11 +25,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "build")));
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/shari", shariRouter);
-
+app.use((req, res, next) => {
+  res.sendFile(__dirname, "build", "index.html");
+});
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
@@ -47,7 +50,9 @@ app.use(function (err, req, res, next) {
 });
 
 mongoose
-  .connect("mongodb://localhost/practiceApi")
+  .connect(
+    "mongodb+srv://usman:usman123@cluster0.qyqzq.mongodb.net/myDb?retryWrites=true&w=majority"
+  )
   .then(() => {
     console.log("connect succes");
   })
